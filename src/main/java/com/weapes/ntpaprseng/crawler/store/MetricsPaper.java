@@ -1,9 +1,11 @@
 package com.weapes.ntpaprseng.crawler.store;
 
+import com.weapes.ntpaprseng.crawler.util.CreateSQL;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.weapes.ntpaprseng.crawler.log.Log.*;
@@ -17,29 +19,8 @@ public class MetricsPaper implements Storable{
 
     private static final Logger LOGGER =
             getLogger(Paper.class);
-    // UPDATE更新sql语句
-    private String UPDATE_SQL =
-            "UPDATE REF_DATA SET " +
-                    "Page_views = ?, " +
-                    "Web_of_Science = ?, " +
-                    "CrossRef = ?, " +
-                    "Scopus = ?, " +
-                    "News_outlets = ?, " +
-                    "reddit = ?, " +
-                    "Blog = ?, " +
-                    "Tweets = ?, " +
-                    "Facebook = ?, " +
-                    "Google = ?, " +
-                    "Pinterest = ?, " +
-                    "wikipedia = ?, " +
-                    "Mendeley = ?, " +
-                    "CiteUlink = ?, " +
-                    "Zotero = ?, " +
-                    "F1000 = ?, " +
-                    "Video = ?, " +
-                    "linkedin = ?, " +
-                    "Q_A = ? " +
-                    "WHERE URL = ";
+    //更新REF_DATA表的sql语句
+    private String REF_UPDATE_SQL = CreateSQL.getRefUpdateSQL();
 
     private final String url;
     private final int pageViews;
@@ -188,9 +169,9 @@ public class MetricsPaper implements Storable{
 
         final HikariDataSource mysqlDataSource = DataSource.getMysqlDataSource();
         // 加上选择条件 URL
-        UPDATE_SQL = UPDATE_SQL + "'" + getUrl() + "'";
+        REF_UPDATE_SQL = REF_UPDATE_SQL + "'" + getUrl() + "'";
         try (final Connection connection = mysqlDataSource.getConnection()){
-            try (final PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+            try (final PreparedStatement preparedStatement = connection.prepareStatement(REF_UPDATE_SQL)) {
                 bindUpdateSql(preparedStatement);
                 // 判断执行是否成功
                 boolean succeed = preparedStatement.executeUpdate() != 0;
@@ -208,6 +189,7 @@ public class MetricsPaper implements Storable{
         }catch (SQLException e){
             e.printStackTrace();
         }
+
         return false;
     }
 
