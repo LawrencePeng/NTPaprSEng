@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static com.weapes.ntpaprseng.crawler.log.Log.getTotalUpdateNumbers;
+import static com.weapes.ntpaprseng.crawler.log.Log.getUpdateFailedNumbers;
+import static com.weapes.ntpaprseng.crawler.log.Log.getUpdateSucceedNumbers;
 import static com.weapes.ntpaprseng.crawler.util.Helper.getLogger;
 
 /**
