@@ -148,7 +148,7 @@ public final class Helper {
 
     // 将JSON对象映射为种子
     private static List<String>
-        parseURLSWithJSONObject(final JSONObject object) {
+    parseURLSWithJSONObject(final JSONObject object) {
 
         final JSONObject range = object.getJSONObject("first_range");
         final JSONArray journals = object.getJSONArray("journals");
@@ -270,15 +270,17 @@ public final class Helper {
         String time = simpleDateFormat.format(now);
         return time;
     }
-    public static String getSeconds(final long millis){
-        float second= (float) (millis/1000.0);
-        System.out.print(second+"秒");
-        return second+"秒";
+
+    public static String getSeconds(final long millis) {
+        float second = (float) (millis / 1000.0);
+        System.out.print(second + "秒");
+        return second + "秒";
     }
-    public static long getMillis(String time){
-        SimpleDateFormat format=new SimpleDateFormat(DATE_FORMAT);
+
+    public static long getMillis(String time) {
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
         try {
-            Date date=format.parse(time);
+            Date date = format.parse(time);
             System.out.println(date.getTime());
             return date.getTime();
         } catch (ParseException e) {

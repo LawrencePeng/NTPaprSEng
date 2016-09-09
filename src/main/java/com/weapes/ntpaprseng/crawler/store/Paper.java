@@ -1,7 +1,6 @@
 package com.weapes.ntpaprseng.crawler.store;
 
 import com.weapes.ntpaprseng.crawler.follow.PaperLink;
-import com.weapes.ntpaprseng.crawler.log.Log;
 import com.weapes.ntpaprseng.crawler.log.SaveLog;
 import com.weapes.ntpaprseng.crawler.util.CreateSQL;
 import com.weapes.ntpaprseng.crawler.util.Helper;
@@ -29,7 +28,7 @@ public class Paper implements Storable {
     private static final String NT_PAPERS_INSERT_SQL = CreateSQL.getNtPapersInsertSQL();
 
 
-    final  String REF_INSERT_SQL =CreateSQL.getRefInsertSQL();
+    final String REF_INSERT_SQL = CreateSQL.getRefInsertSQL();
 
 
     private final List<String> authors;
@@ -47,6 +46,7 @@ public class Paper implements Storable {
     private final String affiliation;
     private final String publishTime;
     private final String crawlTime;
+
     public Paper(final String url,
                  final List<String> authors,
                  final String title,
@@ -76,6 +76,7 @@ public class Paper implements Storable {
         this.publishTime = publishTime;
         this.crawlTime = crawlTime;
     }
+
     private String getUrl() {
         return url;
     }
@@ -165,21 +166,21 @@ public class Paper implements Storable {
             if (isSucceed) {
                 LOGGER.info("当前共有" + getCrawlingSucceedNumbers().incrementAndGet() + "篇爬取成功...\n"
                         + "链接为；" + getUrl());
-                SaveLog.executeUpdateLogSQL(1,getCrawlingSucceedNumbers().get(),getCrawlingFailedNumber().get(),getUrl());
-            }else {
+                SaveLog.executeUpdateLogSQL(1, getCrawlingSucceedNumbers().get(), getCrawlingFailedNumber().get(), getUrl());
+            } else {
                 LOGGER.info("当前共有" + getCrawlingFailedNumber().incrementAndGet() + "篇爬取失败...\n"
                         + "链接为；" + getUrl());
-                SaveLog.executeUpdateLogSQL(0,getCrawlingSucceedNumbers().get(),getCrawlingFailedNumber().get(),getUrl());
+                SaveLog.executeUpdateLogSQL(0, getCrawlingSucceedNumbers().get(), getCrawlingFailedNumber().get(), getUrl());
             }
             if (getLastLink().equals(getUrl())) {
                 LOGGER.info("爬取完成，本次爬取论文总量：" + getUrlNumbers().get()
                         + " 成功数：" + getCrawlingSucceedNumbers().get()
                         + " 失败数：" + getCrawlingFailedNumber().get());
-                long startTime=PaperLink.getStartTime();//开始爬取的时间
-                long endTime=System.currentTimeMillis();//结束爬取的时间
-                long total=endTime-startTime;
-                String averageTime=Helper.getSeconds(total/getUrlNumbers().get());
-                SaveLog.executeUpdateAverageTimeSQL(averageTime,getUrlNumbers().get());
+                long startTime = PaperLink.getStartTime();//开始爬取的时间
+                long endTime = System.currentTimeMillis();//结束爬取的时间
+                long total = endTime - startTime;
+                String averageTime = Helper.getSeconds(total / getUrlNumbers().get());
+                SaveLog.executeUpdateAverageTimeSQL(averageTime, getUrlNumbers().get());
             }
 
             //更新爬取检查状态参数
@@ -211,9 +212,9 @@ public class Paper implements Storable {
         preparedStatement.setString(14, getPublishTime());
     }
 
-    public  void bindRefSQL(final PreparedStatement preparedStatement)
+    public void bindRefSQL(final PreparedStatement preparedStatement)
             throws SQLException {
-        preparedStatement.setString(1,getMetricsUrl());
+        preparedStatement.setString(1, getMetricsUrl());
         preparedStatement.setInt(2, 0);
         preparedStatement.setInt(3, 0);
         preparedStatement.setInt(4, 0);
@@ -238,10 +239,10 @@ public class Paper implements Storable {
     // 将原来的论文详细页面url进行字符串处理，转化为metric相关指标页面url
     private String getMetricsUrl() {
         int index1 = getUrl().indexOf("/full");
-        String subString = getUrl().substring(0,index1);
+        String subString = getUrl().substring(0, index1);
         String subString1 = getUrl().substring(index1);
         int index2 = subString1.indexOf(".html");
-        String subString2 = subString1.substring(5,index2);
+        String subString2 = subString1.substring(5, index2);
         return subString + subString2 + "/metrics";
     }
 }

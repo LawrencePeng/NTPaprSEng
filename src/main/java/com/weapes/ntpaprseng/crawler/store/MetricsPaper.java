@@ -8,8 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.weapes.ntpaprseng.crawler.log.Log.getRefNumbers;
-import static com.weapes.ntpaprseng.crawler.log.Log.getRefreshingingSucceedNumbers;
 import static com.weapes.ntpaprseng.crawler.util.Helper.getLogger;
 
 /**
@@ -180,12 +178,12 @@ public class MetricsPaper implements Storable {
                 if (succeed) {
                     LOGGER.info("当前共有" + getUpdateSucceedNumbers().incrementAndGet() + "篇论文相关指标更新成功...\n"
                             + "链接为；" + getUrl());
-                }else {
+                } else {
                     LOGGER.info("当前共有" + getUpdateFailedNumbers().incrementAndGet() + "篇论文相关指标更新失败...\n"
                             + "链接为；" + getUrl());
                 }
                 if (getUpdateSucceedNumbers().get() == getTotalUpdateNumbers().get()) {
-                    LOGGER.info("更新完成，本次更新相关指标论文总量：" +getTotalUpdateNumbers().get()
+                    LOGGER.info("更新完成，本次更新相关指标论文总量：" + getTotalUpdateNumbers().get()
                             + " 成功数：" + getUpdateSucceedNumbers().get()
                             + " 失败数：" + getUpdateFailedNumbers());
                 }

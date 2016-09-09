@@ -36,10 +36,10 @@ public class PaperLink extends Link {
         LOGGER.info("本次爬取论文" + getUrlNumbers().get() + "篇，"
                 + "正在爬取第" + Log.getCrawlingNumbers().incrementAndGet() + "篇\n"
                 + "链接为：" + getUrl());
-        if (getCrawlingNumbers().get()==1){
-            startTime=System.currentTimeMillis();
+        if (getCrawlingNumbers().get() == 1) {
+            startTime = System.currentTimeMillis();
         }
-        SaveLog.executeInsertLogSQL(getUrl(),getCrawlingNumbers().get(),getUrlNumbers().get(),Helper.getCrawlTime());
+        SaveLog.executeInsertLogSQL(getUrl(), getCrawlingNumbers().get(), getUrlNumbers().get(), Helper.getCrawlTime());
         if (Log.getUrlNumbers().get() == Log.getCrawlingNumbers().get()) {
             Log.setLastLink(getUrl());
         }

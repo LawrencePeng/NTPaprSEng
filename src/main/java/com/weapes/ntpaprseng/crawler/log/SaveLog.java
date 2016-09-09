@@ -12,10 +12,6 @@ import java.sql.SQLException;
  */
 public class SaveLog {
 
-    private SaveLog() {
-
-    }
-
     private static final String INSERTLOG =
             "INSERT INTO LOG(" +
                     "URL," + "ArticlePosition," + "TotalNumber," + "CrawTime)" +
@@ -23,15 +19,19 @@ public class SaveLog {
     private static final String UPDATELOG =
             "UPDATE LOG SET " + "IsSuccessful = ?," + "SuccessfulNumber = ?," +
                     "FailedNumber = ?" + " WHERE URL = ";
-    private static final String UPDATELOGTIME = "UPDATE LOG SET " + "AverageTime = ?"+
+    private static final String UPDATELOGTIME = "UPDATE LOG SET " + "AverageTime = ?" +
             " WHERE TotalNumber = ";
+    private SaveLog() {
+
+    }
+
     public static void executeInsertLogSQL(final String url, final int currentPosition, final int totalNumber, String crawTime) {
         final HikariDataSource mysqlDataSource =
                 DataSource.getMysqlDataSource();
         // 从DB连接池得到连接
         try (final Connection connection = mysqlDataSource.getConnection()) {
             try {
-                 final PreparedStatement preparedStatement =
+                final PreparedStatement preparedStatement =
                         connection.prepareStatement(INSERTLOG);
                 preparedStatement.setString(1, url);
                 preparedStatement.setInt(2, currentPosition);
@@ -54,28 +54,29 @@ public class SaveLog {
     public static void executeUpdateLogSQL(final int isSuccessful, final int successfulNumber, final int failedNumber, String url) {
 
         final HikariDataSource mysqlDataSource = DataSource.getMysqlDataSource();
-        try(Connection connection = mysqlDataSource.getConnection()){
-        try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(UPDATELOG + "'" + url + "'");
-            preparedStatement.setInt(1, isSuccessful);
-            preparedStatement.setInt(2, successfulNumber);
-            preparedStatement.setInt(3, failedNumber);
-            boolean Successful = preparedStatement.executeUpdate() != 0;
-            if (Successful) {
-                System.out.println("更新部分日志成功");
-            } else {
-                System.out.println("更新部分日志失败");
+        try (Connection connection = mysqlDataSource.getConnection()) {
+            try {
+                final PreparedStatement preparedStatement = connection.prepareStatement(UPDATELOG + "'" + url + "'");
+                preparedStatement.setInt(1, isSuccessful);
+                preparedStatement.setInt(2, successfulNumber);
+                preparedStatement.setInt(3, failedNumber);
+                boolean Successful = preparedStatement.executeUpdate() != 0;
+                if (Successful) {
+                    System.out.println("更新部分日志成功");
+                } else {
+                    System.out.println("更新部分日志失败");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
-    public static void executeUpdateAverageTimeSQL(final String averageTime,final int totalNumber) {
+
+    public static void executeUpdateAverageTimeSQL(final String averageTime, final int totalNumber) {
         final HikariDataSource mysqlDataSource = DataSource.getMysqlDataSource();
-        try(Connection connection = mysqlDataSource.getConnection()) {
+        try (Connection connection = mysqlDataSource.getConnection()) {
             try {
                 final PreparedStatement preparedStatement = connection.prepareStatement(UPDATELOGTIME + totalNumber);
                 preparedStatement.setString(1, averageTime);
