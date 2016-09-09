@@ -3,7 +3,6 @@ package com.weapes.ntpaprseng.crawler.crawler;
 import com.weapes.ntpaprseng.crawler.util.Helper;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -43,7 +42,7 @@ class PaperCrawler implements Crawler {
             final int interval_day = Helper.getPaperCrawlerInterval();
             //启动后延迟时间为0，间隔为interval_day，时间单位为minute，调整参数可以改变线程执行策略
             Helper.loadSeeds().forEach(seed ->
-                    CREATOR.scheduleAtFixedRate(new StorableFetcher<>(CREATOR, CONSUMER, seed), 0, interval_day, TimeUnit.MINUTES ));
+                    CREATOR.scheduleAtFixedRate(new StorableFetcher<>(CREATOR, CONSUMER, seed), 0, interval_day, TimeUnit.MINUTES));
 
             LOGGER.info("种子分发完成...");
 

@@ -9,7 +9,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-
 /**
  * Created by lawrence on 16/8/16.
  */
@@ -41,7 +40,7 @@ public class DetailCrawler implements Crawler {
             Helper.loadMetricsLinks().forEach(paper ->
                     CREATOR.scheduleAtFixedRate(new StorableFetcher<>(CREATOR, CONSUMER, paper),
                             0, interval_day, TimeUnit.MINUTES));
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {

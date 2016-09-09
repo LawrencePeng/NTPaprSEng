@@ -5,13 +5,16 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Created by 不一样的天空 on 2016/9/8.
  */
 public class SaveLog {
+
+    private SaveLog() {
+
+    }
 
     private static final String INSERTLOG =
             "INSERT INTO LOG(" +
@@ -20,9 +23,9 @@ public class SaveLog {
     private static final String UPDATELOG =
             "UPDATE LOG SET " + "IsSuccessful = ?," + "SuccessfulNumber = ?," +
                     "FailedNumber = ?" + " WHERE URL = ";
-    private static final String UPDATELOGTIME="UPDATE LOG SET " + "AverageTime = ?"+
+    private static final String UPDATELOGTIME = "UPDATE LOG SET " + "AverageTime = ?"+
             " WHERE TotalNumber = ";
-    public static void executeInsertLogSQL(String url, int currentPosition, int totalNumber, String crawTime) {
+    public static void executeInsertLogSQL(final String url, final int currentPosition, final int totalNumber, String crawTime) {
         final HikariDataSource mysqlDataSource =
                 DataSource.getMysqlDataSource();
         // 从DB连接池得到连接
@@ -48,10 +51,10 @@ public class SaveLog {
 
     }
 
-    public static void executeUpdateLogSQL(int isSuccessful, int successfulNumber, int failedNumber, String url) {
+    public static void executeUpdateLogSQL(final int isSuccessful, final int successfulNumber, final int failedNumber, String url) {
 
         final HikariDataSource mysqlDataSource = DataSource.getMysqlDataSource();
-        try(final Connection connection = mysqlDataSource.getConnection()){
+        try(Connection connection = mysqlDataSource.getConnection()){
         try {
             final PreparedStatement preparedStatement = connection.prepareStatement(UPDATELOG + "'" + url + "'");
             preparedStatement.setInt(1, isSuccessful);
@@ -70,14 +73,14 @@ public class SaveLog {
             e.printStackTrace();
         }
     }
-    public static void executeUpdateAverageTimeSQL(String averageTime,int totalNumber){
+    public static void executeUpdateAverageTimeSQL(final String averageTime,final int totalNumber) {
         final HikariDataSource mysqlDataSource = DataSource.getMysqlDataSource();
-        try(final Connection connection = mysqlDataSource.getConnection()){
+        try(Connection connection = mysqlDataSource.getConnection()) {
             try {
                 final PreparedStatement preparedStatement = connection.prepareStatement(UPDATELOGTIME + totalNumber);
                 preparedStatement.setString(1, averageTime);
-                boolean Successful = preparedStatement.executeUpdate() != 0;
-                if (Successful) {
+                boolean success = preparedStatement.executeUpdate() != 0;
+                if (success) {
                     System.out.println("更新日志平均时间成功");
                 } else {
                     System.out.println("更新日志平均时间失败");

@@ -12,6 +12,10 @@ import java.sql.SQLException;
  * Created by  不一样的天空  on 2016/8/30.
  */
 public class CreateSQL {
+    private CreateSQL() {
+        
+    }
+
     // 第一次更新REF_DATA表的sql语句
     private static final String FIRST_REF_UPDATE_SQL =
             "UPDATE REF_DATA SET "+"Page_views = ?, " + "Web_of_Science = ?, " +

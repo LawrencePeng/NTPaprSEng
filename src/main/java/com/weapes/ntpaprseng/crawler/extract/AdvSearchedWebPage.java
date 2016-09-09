@@ -43,7 +43,8 @@ public class AdvSearchedWebPage extends WebPage {
 
     @Override
     public List<? extends Link> extractAll() {
-        System.out.println("Links parsing: url=" + getUrl() + " type=AdvSearched");
+        System.out.println("Links parsing: url="
+                + getUrl() + " type=AdvSearched");
 
         final Document dom = Jsoup.parse(getText());
 
@@ -62,14 +63,15 @@ public class AdvSearchedWebPage extends WebPage {
 
         return allLinks;
     }
-    private final boolean isPaperLinksToBeCrawled(final String url) {
+
+    private boolean isPaperLinksToBeCrawled(final String url) {
         // 利用Helper中的静态变量或数据库中上一次爬取的最后一条论文详细页面url（备用）
         // 来确定更新的数量，检查范围是本次爬取的所论文，当匹配到上次爬取的末位置就检查完毕
         String lastUrlForLastTime = Helper.lastUrlForLastTime;
-        if (lastUrlForLastTime == null) {//使用备用方法
+        if (lastUrlForLastTime == null) { //使用备用方法
             lastUrlForLastTime = Helper.getLastUrlForLastTime();
         }
-        if (url.equals(lastUrlForLastTime)) {// 匹配到
+        if (url.equals(lastUrlForLastTime)) { // 匹配到
             isDesided = true; //检查完毕，flag置位
             return false;
         } else if (!isDesided) { // 未匹配到且没有检查完毕
@@ -96,7 +98,8 @@ public class AdvSearchedWebPage extends WebPage {
     private List<? extends Link> getPaperLinks(final Elements paperLinks) {
         return paperLinks.stream()
                 .map(link -> new PaperLink(link.attr("href")))
-                .filter(paper -> isURL(paper.getUrl())).filter(paper -> isPaperLinksToBeCrawled(paper.getUrl()))
+                .filter(paper -> isURL(paper.getUrl()))
+                .filter(paper -> isPaperLinksToBeCrawled(paper.getUrl()))
                 .collect(Collectors.toList());
 
     }
@@ -111,9 +114,9 @@ public class AdvSearchedWebPage extends WebPage {
         final int totalNum =
                 Integer.parseInt(parseTotalNumSpan(dom).text().trim());
 
-        return (totalNum % NUM_OF_PAPERS_PER_PAGE) == 0
-                ? totalNum / NUM_OF_PAPERS_PER_PAGE
-                : (totalNum / NUM_OF_PAPERS_PER_PAGE) + 1;
+        return ((totalNum % NUM_OF_PAPERS_PER_PAGE) == 0)
+                ? (totalNum / NUM_OF_PAPERS_PER_PAGE)
+                : ((totalNum / NUM_OF_PAPERS_PER_PAGE) + 1);
     }
 
     // 构建其他AdvSearched链接。
@@ -125,7 +128,7 @@ public class AdvSearchedWebPage extends WebPage {
         return dom.select(PAPER_LINK_CSS_SELECTOR);
     }
 
-    private Elements parseTotalNumSpan(Document dom) {
+    private Elements parseTotalNumSpan(final Document dom) {
         return dom.select(PAPERS_TOTAL_NUM_SELECTOR);
     }
 }
